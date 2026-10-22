@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Fun Learning - Simple Present Tense Kelas 6</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Fredoka & Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        fredoka: ['Fredoka', 'sans-serif'],
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            purple: '#6C5CE7',
+                            pink: '#FD79A8',
+                            yellow: '#FDCB6E',
+                            green: '#00B894',
+                            blue: '#0984E3',
+                            orange: '#E17055'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Fredoka', 'Inter', sans-serif;
+            background: linear-gradient(135deg, #a8c0ff 0%, #3f2b96 100%);
+            min-height: 100vh;
+        }
+        .bounce-hover:hover {
+            transform: scale(1.05) translateY(-3px);
+            transition: all 0.2s ease-in-out;
+        }
+        .card-glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 4px solid #ffffff;
+        }
+        .btn-shadow {
+            box-shadow: 0 6px 0 rgba(0,0,0,0.2);
+        }
+        .btn-shadow:active {
+            box-shadow: 0 2px 0 rgba(0,0,0,0.2);
+            transform: translateY(4px);
+        }
+        .locked-card {
+            filter: grayscale(0.8);
+            opacity: 0.6;
+            cursor: not-allowed !important;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center p-3 sm:p-6 text-gray-800">
+
+    <!-- Container Utama App -->
+    <div id="app" class="w-full max-w-4xl min-h-[600px] card-glass rounded-3xl shadow-2xl p-4 sm:p-8 flex flex-col justify-between relative overflow-hidden">
+        
+        <!-- HEADER TOP BAR -->
+        <header id="header-bar" class="hidden flex justify-between items-center pb-4 border-b-2 border-gray-100">
+            <div class="flex items-center space-x-3">
+                <div class="w-12 h-12 bg-yellow-400 text-white rounded-2xl flex items-center justify-center font-bold text-xl shadow-md">
+                    🎓
+                </div>
+                <div>
+                    <h2 id="user-display-name" class="font-bold text-lg sm:text-xl text-indigo-900 leading-tight">Nama Siswa</h2>
+                    <p id="user-display-class" class="text-xs sm:text-sm text-gray-500 font-sans font-semibold">Kelas 6A - SDN 135 Tanjung Jabung Barat</p>
+                </div>
+            </div>
+            <button onclick="logout()" class="px-3 py-1.5 bg-red-100 text-red-600 rounded-xl hover:bg-red-200 text-xs sm:text-sm font-semibold transition">
+                <i class="fa-solid fa-right-from-bracket mr-1"></i> Keluar
+            </button>
+        </header>
+
+        <!-- Dynamic Content Screen -->
+        <main id="main-content" class="flex-1 my-4 flex flex-col justify-center">
+            <!-- Screen akan diisi secara dinamis oleh JS -->
+        </main>
+
+        <!-- FOOTER -->
+        <footer class="text-center text-xs text-gray-500 font-sans border-t pt-3">
+            Simple Present Tense (Verbal Positive) &bull; SDN 135 Tanjung Jabung Barat
+        </footer>
+    </div>
+
+    <!-- AUDIO EFFECTS USING WEB AUDIO API -->
+    <script>
+        // Sound FX Generator
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        function playSound(type) {
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            if (type === 'click') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.05);
+                gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.05);
+            } else if (type === 'correct') {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+                osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1); // E5
+                osc.frequency.setValueAtTime(783.99, audioCtx.currentTime + 0.2); // G5
+                gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.4);
+            } else if (type === 'wrong') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(300, audioCtx.currentTime);
+                osc.frequency.setValueAtTime(150, audioCtx.currentTime + 0.15);
+                gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.3);
+            }
+        }
+
+        // Text To Speech Helper
+        function speakText(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.85;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+    </script>
+
+    <!-- MAIN APP SCRIPT -->
+    <script>
+        // State Management
+        let currentUser = {
+            name: '',
+            class: '',
+            lastScore: 0,
+            materialRead: false,
+            practiceDone: false,
+            testDone: false
+        };
+
+        const TEACHER_PHONE = "085357959694"; // WhatsApp destination
+
+        // Target Vocabularies
+        const vocabularyList = [
+            { en: 'wake up', id: 'bangun tidur', example: 'I wake up every morning.', exampleId: 'Saya bangun tidur setiap pagi.' },
+            { en: 'get up', id: 'bangun dari tempat tidur', example: 'They get up early everyday.', exampleId: 'Mereka bangun dari tempat tidur lebih awal setiap hari.' },
+            { en: 'cook', id: 'memasak', example: 'She cooks rice every morning.', exampleId: 'Dia (perempuan) memasak nasi setiap pagi.' },
+            { en: 'eat', id: 'makan', example: 'We eat breakfast everyday.', exampleId: 'Kita sarapan (makan pagi) setiap hari.' },
+            { en: 'drink', id: 'minum', example: 'He drinks milk every morning.', exampleId: 'Dia (laki-laki) minum susu setiap pagi.' },
+            { en: 'play', id: 'bermain', example: 'You play football sometimes.', exampleId: 'Kamu kadang-kadang bermain sepak bola.' },
+            { en: 'learn', id: 'belajar', example: 'I learn English everyday.', exampleId: 'Saya belajar bahasa Inggris setiap hari.' },
+            { en: 'speak', id: 'berbicara', example: 'She speaks English every day.', exampleId: 'Dia berbicara bahasa Inggris setiap hari.' },
+            { en: 'read', id: 'membaca', example: 'He reads a book everyday.', exampleId: 'Dia membaca buku setiap hari.' },
+            { en: 'write', id: 'menulis', example: 'I write a story every morning.', exampleId: 'Saya menulis cerita setiap pagi.' },
+            { en: 'study', id: 'belajar / menuntut ilmu', example: 'Budi studies hard everyday.', exampleId: 'Budi belajar giat setiap hari.' },
+            { en: 'sleep', id: 'tidur', example: 'They sleep at night.', exampleId: 'Mereka tidur pada malam hari.' },
+            { en: 'want', id: 'ingin / mau', example: 'I want water now.', exampleId: 'Saya mau air sekarang.' },
+            { en: 'need', id: 'butuh / memerlukan', example: 'She needs a pencil.', exampleId: 'Dia membutuhkan sebuah pensil.' },
+            { en: 'know', id: 'tahu / kenal', example: 'We know the answer.', exampleId: 'Kita tahu jawabannya.' }
+        ];
+
+        const adverbsList = [
+            { en: 'everyday', id: 'setiap hari' },
+            { en: 'every morning', id: 'setiap pagi' },
+            { en: 'always', id: 'selalu' },
+            { en: 'usually', id: 'biasanya' },
+            { en: 'often', id: 'sering' },
+            { en: 'sometimes', id: 'kadang-kadang' }
+        ];
+
+        // Question Banks
+        const practiceQuestions = [
+            {
+                question: "I _____ (makan) fried rice every morning.",
+                options: ["eat", "eats", "eating", "eaten"],
+                correct: 0,
+                explanation: "Subjek <b>'I'</b> menggunakan kata kerja dasar (V1) tanpa akhiran -s."
+            },
+            {
+                question: "She _____ (memasak) delicious food everyday.",
+                options: ["cook", "cooks", "cooking", "cooked"],
+                correct: 1,
+                explanation: "Subjek <b>'She'</b> adalah orang ketiga tunggal, jadi kata kerja ditambahkan <b>-s</b> (cooks)."
+            },
+            {
+                question: "They _____ (bermain) badminton every afternoon.",
+                options: ["plays", "play", "playing", "played"],
+                correct: 1,
+                explanation: "Subjek <b>'They'</b> menggunakan kata kerja dasar (V1) tanpa akhiran -s."
+            },
+            {
+                question: "Budi _____ (belajar) English every day.",
+                options: ["study", "studies", "studys", "studying"],
+                correct: 1,
+                explanation: "Subjek <b>'Budi' (He)</b> kata kerja 'study' berakhiran konsonan + y, berubah menjadi <b>-ies (studies)</b>."
+            },
+            {
+                question: "We _____ (minum) milk every morning.",
+                options: ["drinks", "drinking", "drink", "drank"],
+                correct: 2,
+                explanation: "Subjek <b>'We'</b> menggunakan bentuk V1 tanpa akhiran -s."
+            }
+        ];
+
+        const testQuestionsBank = [
+            { q: "I _____ up early every morning.", options: ["wake", "wakes", "waking", "waked"], answer: 0, explanation: "Subjek 'I' memakai Verb 1 tanpa akhiran -s (wake)." },
+            { q: "She _____ water when she is thirsty.", options: ["drink", "drinks", "drinking", "drank"], answer: 1, explanation: "Subjek 'She' membutuhkan akhiran -s pada kata kerja (drinks)." },
+            { q: "They _____ video games every weekend.", options: ["plays", "play", "playing", "played"], answer: 1, explanation: "Subjek 'They' memakai Verb 1 dasar tanpa -s (play)." },
+            { q: "My mother _____ delicious soup every morning.", options: ["cook", "cooks", "cooking", "cooked"], answer: 1, explanation: "Subjek 'My mother' (She) membutuhkan akhiran -s pada kata kerja (cooks)." },
+            { q: "We _____ English at school everyday.", options: ["learn", "learns", "learning", "learned"], answer: 0, explanation: "Subjek 'We' menggunakan kata kerja dasar V1 (learn)." },
+            { q: "He _____ a newspaper every morning.", options: ["read", "reads", "reading", "reader"], answer: 1, explanation: "Subjek 'He' membutuhkan akhiran -s pada kata kerja (reads)." },
+            { q: "Siti _____ letters to her teacher everyday.", options: ["writes", "write", "writing", "wrote"], answer: 0, explanation: "Subjek 'Siti' (She) membutuhkan akhiran -s pada kata kerja (writes)." },
+            { q: "You _____ at 9 PM every night.", options: ["sleeps", "sleep", "sleeping", "slept"], answer: 1, explanation: "Subjek 'You' menggunakan bentuk kata kerja dasar V1 (sleep)." },
+            { q: "Rudi _____ a new bicycle.", options: ["wants", "want", "wanting", "wanted"], answer: 0, explanation: "Subjek 'Rudi' (He) memerlukan tambahan -s pada kata kerja (wants)." },
+            { q: "We _____ help right now.", options: ["needs", "needing", "need", "needed"], answer: 2, explanation: "Subjek 'We' menggunakan Verb 1 tanpa -s (need)." },
+            { q: "I _____ the correct answer.", options: ["knows", "know", "knowing", "knew"], answer: 1, explanation: "Subjek 'I' menggunakan Verb 1 bentuk dasar (know)." },
+            { q: "She _____ English fluently.", options: ["speaks", "speak", "speaking", "spoke"], answer: 0, explanation: "Subjek 'She' membutuhkan akhiran -s pada kata kerja (speaks)." },
+            { q: "Doni _____ math every night.", options: ["study", "studying", "studies", "studys"], answer: 2, explanation: "Subjek 'Doni' (He) kata kerja 'study' berubah menjadi 'studies'." },
+            { q: "They _____ up from bed at 5 AM.", options: ["get", "gets", "getting", "got"], answer: 0, explanation: "Subjek 'They' menggunakan kata kerja bentuk V1 (get)." },
+            { q: "My father _____ coffee every morning.", options: ["drinks", "drink", "drinking", "drank"], answer: 0, explanation: "Subjek 'My father' (He) memerlukan tambahan -s pada kata kerja (drinks)." }
+        ];
+
+        // App Initialization
+        window.onload = () => {
+            showLoginScreen();
+        };
+
+        // --- SCREENS RENDERERS ---
+
+        // 1. LOGIN SCREEN
+        function showLoginScreen() {
+            document.getElementById('header-bar').classList.add('hidden');
+            const main = document.getElementById('main-content');
+            main.innerHTML = `
+                <div class="text-center max-w-md mx-auto space-y-6">
+                    <div class="inline-block p-4 bg-yellow-100 rounded-full text-yellow-600 mb-2 animate-bounce">
+                        <i class="fa-solid fa-gamepad fa-3x"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-3xl font-extrabold text-indigo-900">English Fun Learning</h1>
+                        <p class="text-gray-600 text-sm mt-1">Simple Present Tense (Verbal Positive)</p>
+                    </div>
+
+                    <form onsubmit="handleLogin(event)" class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 text-left space-y-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1">Nama Lengkap Siswa:</label>
+                            <input type="text" id="input-name" required placeholder="Contoh: Ahmad Rizki" 
+                                class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-sans">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1">Pilih Kelas:</label>
+                            <select id="input-class" required class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white font-sans">
+                                <option value="" disabled selected>-- Pilih Kelas --</option>
+                                <option value="Kelas 6A">Kelas 6A</option>
+                                <option value="Kelas 6B">Kelas 6B</option>
+                            </select>
+                            <p class="text-xs text-gray-400 mt-1">SDN 135 Tanjung Jabung Barat</p>
+                        </div>
+
+                        <button type="submit" onclick="playSound('click')" 
+                            class="w-full py-3.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold rounded-xl shadow-lg hover:from-indigo-700 hover:to-purple-700 transition bounce-hover btn-shadow flex items-center justify-center space-x-2 text-lg">
+                            <span>Mulai Petualangan</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </form>
+                </div>
+            `;
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const name = document.getElementById('input-name').value.trim();
+            const cls = document.getElementById('input-class').value;
+
+            if (name && cls) {
+                currentUser.name = name;
+                currentUser.class = cls;
+                
+                document.getElementById('user-display-name').innerText = currentUser.name;
+                document.getElementById('user-display-class').innerText = `${currentUser.class} - SDN 135 Tanjung Jabung Barat`;
+                document.getElementById('header-bar').classList.remove('hidden');
+
+                showMainMenu();
+            }
+        }
+
+        function logout() {
+            playSound('click');
+            currentUser = { name: '', class: '', lastScore: 0, materialRead: false, practiceDone: false, testDone: false };
+            showLoginScreen();
+        }
+
+        // 2. MAIN MENU SCREEN (Sequential Lock)
+        function showMainMenu() {
+            const main = document.getElementById('main-content');
+
+            const practiceLocked = !currentUser.materialRead;
+            const testLocked = !currentUser.practiceDone;
+
+            main.innerHTML = `
+                <div class="space-y-6 text-center">
+                    <div class="bg-indigo-50 p-4 rounded-2xl border border-indigo-100">
+                        <h2 class="text-2xl font-extrabold text-indigo-900">Halo, ${currentUser.name}! 👋</h2>
+                        <p class="text-indigo-600 text-sm">Selesaikan materi dan latihan secara berurutan untuk membuka Tes Evaluasi!</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <!-- Menu 1: Materi -->
+                        <div onclick="showMateriScreen()" class="bg-gradient-to-br from-blue-400 to-blue-600 text-white p-6 rounded-2xl shadow-lg cursor-pointer bounce-hover flex flex-col items-center justify-center text-center space-y-3 btn-shadow relative">
+                            <span class="absolute top-3 right-3 text-xs bg-white text-blue-700 font-bold px-2 py-0.5 rounded-full">
+                                ${currentUser.materialRead ? '✅ Selesai' : '1. Pertama'}
+                            </span>
+                            <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center text-3xl">
+                                📖
+                            </div>
+                            <h3 class="text-xl font-bold">1. Pelajari Materi</h3>
+                            <p class="text-xs text-blue-100 font-sans">Rumus Simple Present Tense, terjemahan, dan pengucapan kosakata.</p>
+                        </div>
+
+                        <!-- Menu 2: Latihan -->
+                        <div onclick="${practiceLocked ? "playLockedAlert('Silakan pelajari materi terlebih dahulu!')" : "startPractice()"}" 
+                            class="bg-gradient-to-br from-emerald-400 to-emerald-600 text-white p-6 rounded-2xl shadow-lg flex flex-col items-center justify-center text-center space-y-3 btn-shadow relative ${practiceLocked ? 'locked-card' : 'cursor-pointer bounce-hover'}">
+                            <span class="absolute top-3 right-3 text-xs bg-white ${practiceLocked ? 'text-gray-500' : 'text-emerald-700'} font-bold px-2 py-0.5 rounded-full">
+                                ${practiceLocked ? '🔒 Terkunci' : (currentUser.practiceDone ? '✅ Selesai' : '2. Kedua')}
+                            </span>
+                            <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center text-3xl">
+                                ✏️
+                            </div>
+                            <h3 class="text-xl font-bold">2. Latihan Soal</h3>
+                            <p class="text-xs text-emerald-100 font-sans">Uji pemahaman awalmu dengan 5 soal latihan interaktif.</p>
+                        </div>
+
+                        <!-- Menu 3: Tes -->
+                        <div onclick="${testLocked ? "playLockedAlert('Selesaikan Latihan Soal terlebih dahulu untuk membuka tes!')" : "startTest()"}" 
+                            class="bg-gradient-to-br from-purple-500 to-pink-500 text-white p-6 rounded-2xl shadow-lg flex flex-col items-center justify-center text-center space-y-3 btn-shadow relative ${testLocked ? 'locked-card' : 'cursor-pointer bounce-hover'}">
+                            <span class="absolute top-3 right-3 text-xs bg-white ${testLocked ? 'text-gray-500' : 'text-pink-700'} font-bold px-2 py-0.5 rounded-full">
+                                ${testLocked ? '🔒 Terkunci' : '3. Terakhir'}
+                            </span>
+                            <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center text-3xl">
+                                🏆
+                            </div>
+                            <h3 class="text-xl font-bold">3. Tes Evaluasi</h3>
+                            <p class="text-xs text-pink-100 font-sans">Kerjakan 15 soal tes, dapatkan pembahasan & kirim ke Guru!</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function playLockedAlert(msg) {
+            playSound('wrong');
+            alert(msg);
+        }
+
+        // 3. MATERI SCREEN
+        function showMateriScreen() {
+            playSound('click');
+            currentUser.materialRead = true; // Mark as read
+
+            const main = document.getElementById('main-content');
+            main.innerHTML = `
+                <div class="space-y-6 max-h-[500px] overflow-y-auto pr-2">
+                    <div class="flex items-center justify-between border-b pb-3">
+                        <h2 class="text-2xl font-bold text-indigo-900 flex items-center gap-2">
+                            <span>📖</span> Materi: Simple Present Tense (Positive)
+                        </h2>
+                        <button onclick="showMainMenu(); playSound('click')" class="px-3 py-1 bg-indigo-600 text-white rounded-lg text-sm hover:bg-indigo-700 font-sans font-bold shadow">
+                            <i class="fa-solid fa-house mr-1"></i> Selesai & Lanjut
+                        </button>
+                    </div>
+
+                    <!-- Pengertian & Rumus Utama -->
+                    <div class="bg-yellow-50 border-2 border-yellow-300 p-4 rounded-2xl">
+                        <h3 class="font-bold text-yellow-800 text-lg mb-1">💡 Pengertian & Rumus Utama</h3>
+                        <p class="text-sm text-yellow-900 mb-3 font-sans">
+                            <b>Simple Present Tense</b> digunakan untuk menyatakan kebiasaan sehari-hari (habits) atau fakta umum. Kalimat positif verbal menggunakan kata kerja (Verb 1).
+                        </p>
+                        <div class="bg-white p-3 rounded-xl text-center font-bold text-indigo-700 text-lg border border-yellow-200 shadow-sm">
+                            Subject + Verb 1 (s/es) + Complement
+                        </div>
+                    </div>
+
+                    <!-- Aturan Subjek & Kata Kerja -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="bg-blue-50 border border-blue-200 p-4 rounded-xl">
+                            <h4 class="font-bold text-blue-900 mb-1">1. Subjek: I, You, We, They</h4>
+                            <p class="text-xs text-blue-800 font-sans mb-2">Gunakan **Verb 1 Asli** (Tanpa akhiran -s / -es).</p>
+                            <ul class="text-xs space-y-2 font-sans text-blue-900 bg-white p-3 rounded-lg border border-blue-100">
+                                <li>• <b>I eat bread every morning.</b><br><span class="text-gray-500 italic">(Saya makan roti setiap pagi.)</span></li>
+                                <li>• <b>They play football everyday.</b><br><span class="text-gray-500 italic">(Mereka bermain sepak bola setiap hari.)</span></li>
+                                <li>• <b>We learn English together.</b><br><span class="text-gray-500 italic">(Kita belajar Bahasa Inggris bersama.)</span></li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-purple-50 border border-purple-200 p-4 rounded-xl">
+                            <h4 class="font-bold text-purple-900 mb-1">2. Subjek: He, She, It, Nama Orang (Budi/Siti)</h4>
+                            <p class="text-xs text-purple-800 font-sans mb-2">Tambahkan akhiran **-s** atau **-es** pada Kata Kerja (V1).</p>
+                            <ul class="text-xs space-y-2 font-sans text-purple-900 bg-white p-3 rounded-lg border border-purple-100">
+                                <li>• <b>She cooks rice every morning.</b><br><span class="text-gray-500 italic">(Dia memasak nasi setiap pagi.)</span></li>
+                                <li>• <b>He drinks milk everyday.</b><br><span class="text-gray-500 italic">(Dia minum susu setiap hari.)</span></li>
+                                <li>• <b>Budi studies English.</b><br><span class="text-gray-500 italic">(Budi belajar Bahasa Inggris.)</span></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Adverbs of Time (Keterangan Waktu) -->
+                    <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-xl">
+                        <h4 class="font-bold text-emerald-900 mb-2">⏰ Keterangan Waktu (Adverbs of Time)</h4>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                            ${adverbsList.map(adv => `
+                                <div class="bg-white p-2 rounded-lg border border-emerald-200 text-center shadow-sm">
+                                    <p class="font-bold text-emerald-800 text-xs">${adv.en}</p>
+                                    <p class="text-[10px] text-gray-500 font-sans italic">${adv.id}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Vocabulary List Interactive -->
+                    <div class="bg-gray-50 border border-gray-200 p-4 rounded-xl">
+                        <h4 class="font-bold text-gray-800 mb-2 flex items-center justify-between">
+                            <span>🔤 Daftar Kosakata & Contoh Kalimat (Klik untuk Suara 🔊)</span>
+                        </h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            ${vocabularyList.map(v => `
+                                <div onclick="speakText('${v.en}. ${v.example}'); playSound('click')" 
+                                    class="bg-white p-3 rounded-xl border border-gray-200 hover:border-indigo-400 cursor-pointer transition shadow-sm space-y-1">
+                                    <div class="flex justify-between items-center">
+                                        <p class="font-bold text-indigo-900 text-sm">${v.en} <span class="text-xs font-normal text-gray-500 font-sans">(${v.id})</span></p>
+                                        <i class="fa-solid fa-volume-high text-indigo-400 text-xs"></i>
+                                    </div>
+                                    <p class="text-xs font-semibold text-gray-700 font-sans">" ${v.example} "</p>
+                                    <p class="text-[11px] text-gray-500 italic font-sans">Arti: ${v.exampleId}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 4. LATIHAN SOAL (5 SOAL)
+        let practiceIndex = 0;
+        let practiceScore = 0;
+
+        function startPractice() {
+            playSound('click');
+            practiceIndex = 0;
+            practiceScore = 0;
+            renderPracticeQuestion();
+        }
+
+        function renderPracticeQuestion() {
+            const q = practiceQuestions[practiceIndex];
+            const main = document.getElementById('main-content');
+            
+            main.innerHTML = `
+                <div class="space-y-6">
+                    <!-- Top Bar -->
+                    <div class="flex justify-between items-center">
+                        <span class="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full font-bold text-xs">
+                            Latihan Soal ${practiceIndex + 1} dari ${practiceQuestions.length}
+                        </span>
+                        <button onclick="showMainMenu(); playSound('click')" class="text-xs text-gray-500 hover:underline">
+                            Kembali ke Menu
+                        </button>
+                    </div>
+
+                    <!-- Progress Bar -->
+                    <div class="w-full bg-gray-200 h-2.5 rounded-full overflow-hidden">
+                        <div class="bg-emerald-500 h-full transition-all duration-300" style="width: ${((practiceIndex) / practiceQuestions.length) * 100}%"></div>
+                    </div>
+
+                    <!-- Question Card -->
+                    <div class="bg-white p-6 rounded-2xl border-2 border-emerald-100 shadow-sm text-center">
+                        <h3 class="text-xl font-bold text-gray-800 mb-6 font-sans">${q.question}</h3>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="practice-options">
+                            ${q.options.map((opt, i) => `
+                                <button onclick="checkPracticeAnswer(${i})" 
+                                    class="p-4 rounded-xl border-2 border-gray-200 hover:border-emerald-500 hover:bg-emerald-50 text-left font-bold text-gray-700 transition bounce-hover btn-shadow flex items-center justify-between">
+                                    <span>${opt}</span>
+                                    <span class="w-6 h-6 rounded-full border text-xs flex items-center justify-center text-gray-400">${String.fromCharCode(65 + i)}</span>
+                                </button>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Feedback Area -->
+                    <div id="practice-feedback" class="hidden p-4 rounded-xl text-sm font-sans border"></div>
+                </div>
+            `;
+        }
+
+        function checkPracticeAnswer(selected) {
+            const q = practiceQuestions[practiceIndex];
+            const feedbackEl = document.getElementById('practice-feedback');
+            const optionsEl = document.getElementById('practice-options');
+            
+            // Disable buttons
+            Array.from(optionsEl.children).forEach(btn => btn.disabled = true);
+
+            if (selected === q.correct) {
+                playSound('correct');
+                practiceScore++;
+                feedbackEl.className = "p-4 rounded-xl text-sm font-sans border bg-green-50 border-green-200 text-green-800 space-y-2 block";
+                feedbackEl.innerHTML = `
+                    <p class="font-bold text-base flex items-center gap-2">
+                        <span>🎉 Jawaban Benar!</span>
+                    </p>
+                    <p>${q.explanation}</p>
+                    <button onclick="nextPractice()" class="mt-2 px-4 py-2 bg-green-600 text-white rounded-lg font-bold hover:bg-green-700">Lanjut <i class="fa-solid fa-arrow-right ml-1"></i></button>
+                `;
+            } else {
+                playSound('wrong');
+                feedbackEl.className = "p-4 rounded-xl text-sm font-sans border bg-red-50 border-red-200 text-red-800 space-y-2 block";
+                feedbackEl.innerHTML = `
+                    <p class="font-bold text-base flex items-center gap-2">
+                        <span>❌ Kurang Tepat!</span>
+                    </p>
+                    <p>Jawaban yang benar adalah: <b>${q.options[q.correct]}</b></p>
+                    <p>${q.explanation}</p>
+                    <button onclick="nextPractice()" class="mt-2 px-4 py-2 bg-red-600 text-white rounded-lg font-bold hover:bg-red-700">Lanjut <i class="fa-solid fa-arrow-right ml-1"></i></button>
+                `;
+            }
+        }
+
+        function nextPractice() {
+            playSound('click');
+            practiceIndex++;
+            if (practiceIndex < practiceQuestions.length) {
+                renderPracticeQuestion();
+            } else {
+                currentUser.practiceDone = true; // Mark practice done
+                showPracticeResult();
+            }
+        }
+
+        function showPracticeResult() {
+            const main = document.getElementById('main-content');
+            main.innerHTML = `
+                <div class="text-center space-y-6 max-w-md mx-auto">
+                    <div class="text-5xl">🌟</div>
+                    <h2 class="text-2xl font-bold text-indigo-900">Latihan Selesai!</h2>
+                    <p class="text-gray-600 font-sans">Kamu telah menyelesaikan seluruh soal latihan. Sekarang menu <b>Tes Evaluasi</b> telah terbuka!</p>
+                    
+                    <div class="bg-emerald-50 p-6 rounded-2xl border border-emerald-200">
+                        <p class="text-sm text-emerald-800 font-sans font-semibold">Skor Latihan Kamu:</p>
+                        <p class="text-4xl font-extrabold text-emerald-600 my-2">${(practiceScore / practiceQuestions.length) * 100}</p>
+                        <p class="text-xs text-emerald-700">${practiceScore} dari ${practiceQuestions.length} soal dijawab dengan benar.</p>
+                    </div>
+
+                    <div class="flex gap-3">
+                        <button onclick="startPractice()" class="flex-1 py-3 bg-gray-200 text-gray-700 font-bold rounded-xl hover:bg-gray-300">Ulangi Latihan</button>
+                        <button onclick="showMainMenu()" class="flex-1 py-3 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700">Menu Utama</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 5. TES EVALUASI (15 SOAL PILIHAN GANDA DENGAN PEMBAHASAN SIKAP JAWAB)
+        let testIndex = 0;
+        let testUserAnswers = [];
+        let shuffledTestQuestions = [];
+
+        function startTest() {
+            playSound('click');
+            testIndex = 0;
+            testUserAnswers = [];
+            // Shallow clone and shuffle
+            shuffledTestQuestions = [...testQuestionsBank].sort(() => Math.random() - 0.5);
+            renderTestQuestion();
+        }
+
+        function renderTestQuestion() {
+            const q = shuffledTestQuestions[testIndex];
+            const main = document.getElementById('main-content');
+
+            main.innerHTML = `
+                <div class="space-y-5">
+                    <!-- Header -->
+                    <div class="flex justify-between items-center border-b pb-3">
+                        <span class="px-3 py-1 bg-purple-100 text-purple-700 rounded-full font-bold text-xs">
+                            Tes Evaluasi: Soal ${testIndex + 1} / ${shuffledTestQuestions.length}
+                        </span>
+                        <span class="text-xs text-gray-400 font-sans">Pilih 1 jawaban paling tepat</span>
+                    </div>
+
+                    <!-- Progress Bar -->
+                    <div class="w-full bg-gray-200 h-2 rounded-full overflow-hidden">
+                        <div class="bg-purple-600 h-full transition-all duration-300" style="width: ${((testIndex) / shuffledTestQuestions.length) * 100}%"></div>
+                    </div>
+
+                    <!-- Question Box -->
+                    <div class="bg-white p-6 rounded-2xl border-2 border-purple-100 shadow-sm">
+                        <h3 class="text-lg sm:text-xl font-bold text-gray-800 mb-6 font-sans">
+                            ${testIndex + 1}. ${q.q}
+                        </h3>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="test-options">
+                            ${q.options.map((opt, i) => `
+                                <button onclick="selectTestAnswer(${i})" 
+                                    class="p-4 rounded-xl border-2 border-gray-200 hover:border-purple-500 hover:bg-purple-50 text-left font-bold text-gray-700 transition bounce-hover btn-shadow flex items-center justify-between">
+                                    <span><b>${String.fromCharCode(65 + i)}.</b> ${opt}</span>
+                                </button>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Test Feedback & Discussion Box -->
+                    <div id="test-feedback" class="hidden p-4 rounded-xl text-sm font-sans border"></div>
+                </div>
+            `;
+        }
+
+        function selectTestAnswer(ansIndex) {
+            const q = shuffledTestQuestions[testIndex];
+            const feedbackEl = document.getElementById('test-feedback');
+            const optionsEl = document.getElementById('test-options');
+
+            // Disable option buttons
+            Array.from(optionsEl.children).forEach(btn => btn.disabled = true);
+
+            const isCorrect = (ansIndex === q.answer);
+
+            testUserAnswers.push({
+                question: q.q,
+                selected: ansIndex,
+                correct: q.answer
+            });
+
+            if (isCorrect) {
+                playSound('correct');
+                feedbackEl.className = "p-4 rounded-xl text-sm font-sans border bg-green-50 border-green-200 text-green-900 space-y-2 block";
+                feedbackEl.innerHTML = `
+                    <p class="font-bold text-base text-green-700 flex items-center gap-1">
+                        <span>🎉 Jawaban Kamu Benar!</span>
+                    </p>
+                    <p><b>Pembahasan:</b> ${q.explanation}</p>
+                    <button onclick="nextTestQuestion()" class="mt-2 px-4 py-2 bg-purple-600 text-white font-bold rounded-lg hover:bg-purple-700">
+                        Soal Berikutnya <i class="fa-solid fa-arrow-right ml-1"></i>
+                    </button>
+                `;
+            } else {
+                playSound('wrong');
+                feedbackEl.className = "p-4 rounded-xl text-sm font-sans border bg-red-50 border-red-200 text-red-900 space-y-2 block";
+                feedbackEl.innerHTML = `
+                    <p class="font-bold text-base text-red-700 flex items-center gap-1">
+                        <span>❌ Jawaban Kamu Kurang Tepat!</span>
+                    </p>
+                    <p>Jawaban yang benar: <b>${String.fromCharCode(65 + q.answer)}. ${q.options[q.answer]}</b></p>
+                    <p><b>Pembahasan:</b> ${q.explanation}</p>
+                    <button onclick="nextTestQuestion()" class="mt-2 px-4 py-2 bg-purple-600 text-white font-bold rounded-lg hover:bg-purple-700">
+                        Soal Berikutnya <i class="fa-solid fa-arrow-right ml-1"></i>
+                    </button>
+                `;
+            }
+        }
+
+        function nextTestQuestion() {
+            playSound('click');
+            testIndex++;
+
+            if (testIndex < shuffledTestQuestions.length) {
+                renderTestQuestion();
+            } else {
+                finishTest();
+            }
+        }
+
+        function finishTest() {
+            // Calculate Score
+            let correctCount = 0;
+            testUserAnswers.forEach(ans => {
+                if (ans.selected === ans.correct) correctCount++;
+            });
+
+            const finalScore = Math.round((correctCount / shuffledTestQuestions.length) * 100);
+            currentUser.lastScore = finalScore;
+            currentUser.testDone = true;
+
+            // Trigger Confetti Celebration at the end of the test
+            confetti({
+                particleCount: 120,
+                spread: 80,
+                origin: { y: 0.6 }
+            });
+
+            setTimeout(() => {
+                confetti({
+                    particleCount: 60,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 }
+                });
+                confetti({
+                    particleCount: 60,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 }
+                });
+            }, 300);
+
+            renderTestResult(correctCount, finalScore);
+        }
+
+        function renderTestResult(correctCount, finalScore) {
+            const main = document.getElementById('main-content');
+            
+            // Custom Badge Message
+            let badge = "🥇 Hebat Sekali! Luar Biasa!";
+            let badgeBg = "bg-yellow-100 text-yellow-800 border-yellow-300";
+            if (finalScore < 70) {
+                badge = "📚 Tetap Semangat Belajar Ya!";
+                badgeBg = "bg-blue-100 text-blue-800 border-blue-300";
+            }
+
+            main.innerHTML = `
+                <div class="text-center space-y-5 max-w-lg mx-auto">
+                    <div class="inline-block px-4 py-1.5 rounded-full border font-bold text-sm ${badgeBg}">
+                        ${badge}
+                    </div>
+
+                    <h2 class="text-2xl font-extrabold text-indigo-900">Hasil Tes Evaluasi</h2>
+                    
+                    <div class="bg-gradient-to-br from-indigo-50 to-purple-50 p-6 rounded-3xl border-2 border-indigo-100 shadow-sm space-y-3">
+                        <p class="text-sm text-gray-500 font-sans">Nilai Akhir Kamu:</p>
+                        <div class="text-6xl font-black text-indigo-600 tracking-tight">
+                            ${finalScore}
+                        </div>
+                        <p class="text-xs text-gray-600 font-sans font-semibold">
+                            Benar ${correctCount} dari ${shuffledTestQuestions.length} Soal
+                        </p>
+                    </div>
+
+                    <!-- Tombol WA Guru (Kirim Nilai) -->
+                    <div class="p-4 bg-emerald-50 rounded-2xl border border-emerald-200 text-left space-y-2">
+                        <div class="flex items-center space-x-2 text-emerald-800 font-bold text-sm">
+                            <i class="fa-brands fa-whatsapp text-lg text-emerald-600"></i>
+                            <span>Lapor Hasil Ke Guru</span>
+                        </div>
+                        <p class="text-xs text-emerald-700 font-sans">
+                            Klik tombol di bawah untuk mengonfirmasi dan mengirimkan rekap hasil tes ini langsung ke WhatsApp Guru.
+                        </p>
+                        <button onclick="sendToWhatsApp(${finalScore}, ${correctCount})" 
+                            class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow transition bounce-hover flex items-center justify-center space-x-2 text-sm btn-shadow">
+                            <i class="fa-brands fa-whatsapp text-lg"></i>
+                            <span>Kirim Konfirmasi Hasil ke WA Guru</span>
+                        </button>
+                    </div>
+
+                    <div class="flex gap-3">
+                        <button onclick="startTest()" class="flex-1 py-3 bg-gray-200 text-gray-700 font-bold rounded-xl hover:bg-gray-300 text-sm">
+                            Ulangi Tes
+                        </button>
+                        <button onclick="showMainMenu()" class="flex-1 py-3 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 text-sm">
+                            Menu Utama
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Send WhatsApp Confirmation
+        function sendToWhatsApp(score, correctCount) {
+            playSound('click');
+            const message = `Assalamu'alaikum / Selamat Hari Ibu/Bapak Guru,\n\nSaya telah selesai mengerjakan Tes Evaluasi pembelajaran Bahasa Inggris (Simple Present Tense - Kalimat Positif):\n\n👤 *Nama Lengkap*: ${currentUser.name}\n🏫 *Kelas*: ${currentUser.class}\n📍 *Sekolah*: SDN 135 Tanjung Jabung Barat\n\n📊 *HASIL EVALUASI*:\n- Jumlah Soal: ${shuffledTestQuestions.length}\n- Benar: ${correctCount}\n- *Nilai Akhir: ${score}*\n\nTerima kasih Banyak! 🙏`;
+
+            const encodedText = encodeURIComponent(message);
+            // Form WhatsApp link without showing phone number directly on user view
+            const waUrl = `https://wa.me/62${TEACHER_PHONE.substring(1)}?text=${encodedText}`;
+
+            window.open(waUrl, '_blank');
+        }
+    </script>
+</body>
+</html>
